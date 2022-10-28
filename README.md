@@ -16,7 +16,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Installation
 
-1. Upload `pattern-file-fields.zip` to the `/wp-content/plugins/` directory and unzip it there, or use the WordPress Dashboard to install it.
+1. Upload `PatternFileFields.zip` to the `/wp-content/plugins/` directory and unzip it there, or use the WordPress Dashboard to install it.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 ## Changelog
