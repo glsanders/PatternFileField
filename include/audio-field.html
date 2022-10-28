@@ -1,0 +1,331 @@
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <style>
+            .audio_field_container {
+                border-radius: 15px;
+                width: 450px;
+                height: 175px;
+                padding: 10px;
+            }
+
+            #audio_drop_container {
+                background-color: #f2f1f1;
+                justify-content: center;
+                transition: all 200ms;
+            }
+
+            #audio_drop_container.hover {
+                background-color: #d4d3d3;
+                padding: 12px;
+            }
+
+            #inner_audio_drop_bloc {
+                border-radius: 15px;
+                text-align: center;
+                align-items: center;
+                border: 2px dashed rgba(0, 0, 0, 0.3);
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                padding: 10px;
+            }
+
+            #audio_upload_text {
+                font-size: 15px;
+            }
+
+            #audio_file_input {
+                width: 0.1px;
+                height: 0.1px;
+                opacity: 0;
+                overflow: hidden;
+                position: absolute;
+                z-index: -1;
+            }
+
+            #audio_file_input + label {
+                /* font-size: 1.25em; */
+                width: 125px;
+                height: 40px;
+                font-weight: 600;
+                font-size: 15px;
+                color: white;
+                background-color: #29303d;
+                display: inline-block;
+                /* padding-top: 10px; */
+                line-height: 40px;
+                border-radius: 10px;
+                margin-top: 10px;
+                cursor: pointer;
+            }
+
+            #audio_file_input:focus + label,
+            #audio_file_input + label:hover {
+                background-color: transparent;
+                border: 2px solid #29303d;
+                color: #29303d;
+            }
+
+            #audio_display_container {
+                background-color: #d4d3d3;
+            }
+
+            #drop_audio_display_container {
+                position: relative;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+            }
+
+            #audio_delete_button {
+                position: absolute;
+                bottom: -10px;
+                left: -10px;
+                width: 450px;
+                height: 40%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                background-color: #29303d;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            #drop_audio {
+                position: absolute;
+                top: -80px;
+                height: 100%;
+                width: 100%;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .error {
+                color: red;
+                font-size: 15px;
+            }
+
+            .controls {
+                width: 100%;
+                height: 60%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .controls > * {
+                display: inline-block;
+                vertical-align: middle;
+                color: #29303d;
+            }
+
+            #audio_button {
+                cursor: pointer;
+                margin-right: 10px;
+            }
+
+            #audio_progress_line {
+                height: 25px;
+                width: 335px;
+                background: gray;
+            }
+
+            #audio_progress {
+                width: 0%;
+                height: 25px;
+                background: #29303d;
+            }
+
+            .material-icons.md-48 {
+                font-size: 48px;
+            }
+        </style>
+        <script>
+            // Variables
+
+            var audioPlaying = false;
+
+            // DROP ZONE ACTIONS
+
+            function audioDropZoneDrop(event) {
+                event.preventDefault();
+
+                hideAudioError();
+                disableAudioDropZoneHover();
+
+                let dropZone = document.getElementById("audio_drop_container");
+                dropZone.classList.remove("hover");
+                let transfer = event.dataTransfer;
+                let file = transfer.files[0];
+                processAudioFile(file);
+            }
+
+            function audioDropZoneDragOver(event) {
+                event.preventDefault();
+                enableAudioDropZoneHover();
+            }
+
+            function onUploadAudio() {
+                let fileInput = document.getElementById("audio_file_input");
+                let file = fileInput.files[0];
+                processAudioFile(file);
+            }
+
+            function audioDropZoneDragLeave(event) {
+                disableAudioDropZoneHover();
+            }
+
+            // FUNCTIONS
+
+            function registerListeners() {
+                let audio = document.getElementById("drop_audio");
+                audio.addEventListener("pause", onPause);
+                audio.addEventListener("play", onPlay);
+                audio.addEventListener("timeupdate", onProgress);
+            }
+
+            function onPause(event) {
+                audioPlaying = false;
+                let button = document.getElementById("audio_button");
+                button.innerHTML = "play_circle_filled";
+            }
+
+            function onPlay(event) {
+                audioPlaying = true;
+                let button = document.getElementById("audio_button");
+                button.innerHTML = "pause_circle_filled";
+            }
+
+            function onProgress(event) {
+                let button = document.getElementById("drop_audio");
+                let progress = document.getElementById("audio_progress");
+                let percent = `${(button.currentTime / button.duration) * 100}%`;
+                progress.style.width = percent;
+            }
+
+            function enableAudioDropZoneHover() {
+                let dropZone = document.getElementById("audio_drop_container");
+                dropZone.classList.add("hover");
+            }
+
+            function disableAudioDropZoneHover() {
+                let dropZone = document.getElementById("audio_drop_container");
+                dropZone.classList.remove("hover");
+            }
+
+            function processAudioFile(file) {
+                hideAudioError();
+                if (!audioWithinSizeLimit(file)) {
+                    return;
+                }
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    let base64 = reader.result;
+                    if (!base64.includes("data:audio/mpeg;base64,")) {
+                        showAudioError("Must be audio file with MP3 extension.");
+                    } else {
+                        showAudio(base64);
+                    }
+                };
+                reader.onerror = function () {
+                    alert(reader.error);
+                };
+            }
+
+            function audioWithinSizeLimit(file) {
+                let size = file.size;
+                let kb = audioByteLimit / 1000;
+                if (size < audioByteLimit) {
+                    return true;
+                } else {
+                    showAudioError(`File must be smaller than ${kb}KB.`);
+                }
+            }
+
+            function showAudio(data) {
+                let dropZone = document.getElementById("audio_drop_container");
+                let audioContainer = document.getElementById("audio_display_container");
+                let audio = document.getElementById("drop_audio");
+                let audio_src = document.getElementById("drop_audio_src");
+                let valueInput = document.getElementById("audio_value_input");
+                let fileInput = document.getElementById("audio_file_input");
+
+                dropZone.classList.add("hidden");
+                audio_src.src = data;
+                valueInput.value = data;
+                audioContainer.classList.remove("hidden");
+                audio.load();
+                fileInput.disabled = true;
+            }
+
+            function clearAudio() {
+                let dropZone = document.getElementById("audio_drop_container");
+                let audioContainer = document.getElementById("audio_display_container");
+                let audio = document.getElementById("drop_audio");
+                let audio_src = document.getElementById("drop_audio_src");
+                let valueInput = document.getElementById("audio_value_input");
+                let fileInput = document.getElementById("audio_file_input");
+
+                audio.pause();
+                audioContainer.classList.add("hidden");
+                audio_src.src = "";
+                dropZone.classList.remove("hidden");
+                valueInput.value = "";
+                fileInput.disabled = false;
+            }
+
+            function hideAudioError() {
+                let errorElement = document.getElementById("audio_upload_error");
+                errorElement.classList.add("hidden");
+            }
+
+            function showAudioError(message) {
+                let errorElement = document.getElementById("audio_upload_error");
+                errorElement.innerText = message;
+                errorElement.classList.remove("hidden");
+            }
+
+            function playPause() {
+                let audio = document.getElementById("drop_audio");
+                if (audioPlaying) {
+                    audio.pause();
+                } else {
+                    audio.play();
+                }
+            }
+
+            function pause() {
+                document.getElementById("drop_audio").pause();
+            }
+        </script>
+    </head>
+    <body onload="registerListeners()">
+        <input type="text" id="audio_value_input" name="audio_field_name" value="" hidden />
+        <div id="audio_drop_container" ondrop="audioDropZoneDrop(event);" ondragover="audioDropZoneDragOver(event);" ondragleave="audioDropZoneDragLeave(event);" class="audio_field_container">
+            <div id="inner_audio_drop_bloc">
+                <p id="audio_upload_text">Drag file to upload,<br />or click below to select file.</p>
+                <input type="file" accept=".mp3" name="audio_file_input" id="audio_file_input" onchange="onUploadAudio()" />
+                <label for="audio_file_input">Select File</label>
+                <p id="audio_upload_error" class="error hidden"></p>
+            </div>
+        </div>
+        <div id="audio_display_container" class="audio_field_container hidden">
+            <div id="drop_audio_display_container" class="">
+                <audio id="drop_audio" autobuffer="autobuffer">
+                    <source id="drop_audio_src" src="" />
+                </audio>
+                <div class="controls">
+                    <i id="audio_button" class="material-icons md-48" onclick="playPause()">play_circle_filled</i>
+                    <div id="audio_progress_line">
+                        <div id="audio_progress"></div>
+                    </div>
+                </div>
+                <button id="audio_delete_button" type="button" onclick="clearAudio()">Remove</button>
+            </div>
+        </div>
+    </body>
+</html>

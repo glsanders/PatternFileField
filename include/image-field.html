@@ -1,0 +1,239 @@
+<html>
+    <head>
+        <style>
+            #drop_container {
+                background-color: #f2f1f1;
+                border-radius: 15px;
+                width: 250px;
+                height: 250px;
+                padding: 10px;
+                justify-content: center;
+                transition: all 200ms;
+            }
+
+            #drop_container.hover {
+                background-color: #d4d3d3;
+                padding: 12px;
+            }
+
+            #inner_drop_block {
+                border-radius: 15px;
+                text-align: center;
+                align-items: center;
+                border: 2px dashed rgba(0, 0, 0, 0.3);
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                padding: 10px;
+            }
+
+            #upload_text {
+                margin-top: 20px;
+                font-size: 15px;
+            }
+
+            #file_input {
+                width: 0.1px;
+                height: 0.1px;
+                opacity: 0;
+                overflow: hidden;
+                position: absolute;
+                z-index: -1;
+            }
+
+            #file_input + label {
+                /* font-size: 1.25em; */
+                width: 125px;
+                height: 50px;
+                font-weight: 600;
+                font-size: 15px;
+                color: white;
+                background-color: #29303d;
+                display: inline-block;
+                /* padding-top: 10px; */
+                line-height: 50px;
+                border-radius: 10px;
+                margin-top: 15px;
+                cursor: pointer;
+            }
+
+            #file_input:focus + label,
+            #file_input + label:hover {
+                background-color: transparent;
+                border: 2px solid #29303d;
+                color: #29303d;
+            }
+
+            #image_container {
+                background-color: #d4d3d3;
+                border-radius: 15px;
+                width: 250px;
+                height: 250px;
+                padding: 10px;
+                justify-content: center;
+            }
+
+            #drop_image_container {
+                position: relative;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+            }
+
+            #delete_button {
+                position: absolute;
+                bottom: -10px;
+                left: -10px;
+                width: 250px;
+                color: white;
+                background-color: #29303d;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            #drop_image {
+                height: 100%;
+                width: 100%;
+                object-fit: contain;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .error {
+                color: red;
+                font-size: 15px;
+            }
+        </style>
+        <script>
+            // DROP ZONE ACTIONS
+
+            function dropZoneDrop(event) {
+                event.preventDefault();
+
+                hideError();
+                disableDropZoneHover();
+
+                let dropZone = document.getElementById("drop_container");
+                dropZone.classList.remove("hover");
+                let transfer = event.dataTransfer;
+                let file = transfer.files[0];
+                processFile(file);
+            }
+
+            function dropZoneDragOver(event) {
+                event.preventDefault();
+                enableDropZoneHover();
+            }
+
+            function onUploadFile() {
+                let fileInput = document.getElementById("file_input");
+                let file = fileInput.files[0];
+                processFile(file);
+            }
+
+            function dropZoneDragLeave(event) {
+                disableDropZoneHover();
+            }
+
+            // FUNCTIONS
+
+            function enableDropZoneHover() {
+                let dropZone = document.getElementById("drop_container");
+                dropZone.classList.add("hover");
+            }
+
+            function disableDropZoneHover() {
+                let dropZone = document.getElementById("drop_container");
+                dropZone.classList.remove("hover");
+            }
+
+            function processFile(file) {
+                hideError();
+                if (!imageWithinSizeLimit(file)) {
+                    return;
+                }
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    let base64 = reader.result;
+                    if (!base64.includes("image/png") && !base64.includes("image/jpeg")) {
+                        showError("Image must be in PNG or JPEG format.");
+                    } else {
+                        showImage(base64);
+                    }
+                };
+                reader.onerror = function () {
+                    alert(reader.error);
+                };
+            }
+
+            function imageWithinSizeLimit(file) {
+                let size = file.size;
+                let kb = imageByteLimit / 1000;
+                if (size < imageByteLimit) {
+                    return true;
+                } else {
+                    showError(`File must be smaller than ${kb}KB.`);
+                }
+            }
+
+            function showImage(data) {
+                let dropZone = document.getElementById("drop_container");
+                let imageContainer = document.getElementById("image_container");
+                let image = document.getElementById("drop_image");
+                let valueInput = document.getElementById("value_input");
+                let fileInput = document.getElementById("file_input");
+
+                dropZone.classList.add("hidden");
+                image.src = data;
+                valueInput.value = data;
+                imageContainer.classList.remove("hidden");
+                fileInput.disabled = true;
+            }
+
+            function clearImage() {
+                let dropZone = document.getElementById("drop_container");
+                let imageContainer = document.getElementById("image_container");
+                let image = document.getElementById("drop_image");
+                let valueInput = document.getElementById("value_input");
+                let fileInput = document.getElementById("file_input");
+
+                imageContainer.classList.add("hidden");
+                image.src = "";
+                dropZone.classList.remove("hidden");
+                valueInput.value = "";
+                fileInput.disabled = false;
+            }
+
+            function hideError() {
+                let errorElement = document.getElementById("upload_error");
+                errorElement.classList.add("hidden");
+            }
+
+            function showError(message) {
+                let errorElement = document.getElementById("upload_error");
+                errorElement.innerText = message;
+                errorElement.classList.remove("hidden");
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" id="value_input" name="field_name" value="" hidden />
+        <div id="drop_container" ondrop="dropZoneDrop(event);" ondragover="dropZoneDragOver(event);" ondragleave="dropZoneDragLeave(event);" class="">
+            <div id="inner_drop_block">
+                <p id="upload_text">Drag file to upload,<br />or click below to select file.</p>
+                <input type="file" accept="image/png,image/jpeg" name="file_input" id="file_input" onchange="onUploadFile()" />
+                <label for="file_input">Select File</label>
+                <p id="upload_error" class="error hidden"></p>
+            </div>
+        </div>
+        <div id="image_container" class="hidden">
+            <div id="drop_image_container" class="">
+                <img id="drop_image" src="" alt="Dropped image" />
+                <button id="delete_button" type="button" onclick="clearImage()">Remove</button>
+            </div>
+        </div>
+    </body>
+</html>
