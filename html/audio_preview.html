@@ -1,0 +1,18 @@
+<div>
+    <div id="audio_display_container_UID" class="audio_container audio_preview_container">
+        <div class="audio_player_container">
+            <audio id="pattern_audio_UID" class="pattern_audio" autobuffer="autobuffer">
+                <source id="pattern_audio_src_UID" class="pattern_audio_src" src="AUDIO_SOURCE" />
+            </audio>
+            <div class="controls preview_controls">
+                <i id="audio_button_UID" class="audio_button material-icons md-48" onclick="playPause('UID');">play_circle_filled</i>
+                <div class="audio_progress_line">
+                    <div id="audio_progress_UID" class="audio_progress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    setupPreview("UID");
+</script>

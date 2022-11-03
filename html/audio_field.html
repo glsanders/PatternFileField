@@ -1,0 +1,28 @@
+<div>
+    <input type="text" id="audio_value_input_UID" name="item_meta[UID]" value="" hidden />
+    <div id="audio_drop_container_UID" class="audio_drop_container audio_container" ondrop="audioDropZoneDrop(event, UID);" ondragover="audioDropZoneDragOver(event, UID);" ondragleave="audioDropZoneDragLeave(event, UID);">
+        <div class="inner_audio_drop_bloc">
+            <p class="audio_upload_text">Drag file to upload,<br />or click below to select file.</p>
+            <input type="file" accept=".mp3" name="audio_file_input_UID" id="audio_file_input_UID" class="audio_file_input" onchange="onUploadAudio(UID);" />
+            <label for="audio_file_input_UID">Select File</label>
+            <p id="audio_upload_error_UID" class="error hidden"></p>
+        </div>
+    </div>
+    <div id="audio_display_container_UID" class="audio_container hidden">
+        <div class="audio_player_container">
+            <audio id="pattern_audio_UID" class="pattern_audio" autobuffer="autobuffer">
+                <source id="pattern_audio_src_UID" class="pattern_audio_src" src="" />
+            </audio>
+            <div class="controls">
+                <i id="audio_button_UID" class="audio_button material-icons md-48" onclick="playPause(UID);">play_circle_filled</i>
+                <div class="audio_progress_line">
+                    <div id="audio_progress_UID" class="audio_progress"></div>
+                </div>
+            </div>
+            <button class="audio_delete_button" type="button" onclick="clearAudio(UID);">Remove</button>
+        </div>
+    </div>
+</div>
+<script>
+    setupAudioField("UID", AUDIO_BYTE_LIMIT, "EXISTING_AUDIO_DATA");
+</script>

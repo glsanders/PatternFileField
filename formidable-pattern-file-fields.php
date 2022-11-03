@@ -31,6 +31,21 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 
 /*
+  STYLE SHEET
+ */
+add_action('wp_enqueue_scripts', 'add_supporting_files');
+function add_supporting_files() {
+  $plugin_url = plugin_dir_url(__FILE__);
+  wp_enqueue_script('pattern_fields_audio_scripts', $plugin_url . 'javascript/audio_scripts.js');
+  wp_enqueue_script('pattern_fields_image_scripts', $plugin_url . 'javascript/image_scripts.js');
+  wp_enqueue_style('pattern_fields_common_styles', $plugin_url . 'css/common_styles.css');
+  wp_enqueue_style('pattern_fields_audio_styles', $plugin_url . 'css/audio_styles.css');
+  wp_enqueue_style('pattern_fields_image_styles', $plugin_url . 'css/image_styles.css');
+  wp_enqueue_style('pattern_material_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons');
+}
+
+
+/*
   IMAGE FIELD
 */
 
@@ -73,23 +88,37 @@ function show_image_admin_field($field) {
 /* Control the output for file_string field in your form. */
 add_action('frm_form_fields', 'show_image_field', 10, 2);
 function show_image_field($field, $field_name) {
+  $plugin_url = plugin_dir_url(__FILE__);
   if ($field['type'] != 'pattern_image') {
     return;
   }
   $field['value'] = stripslashes_deep($field['value']);
-  include('include/image-field.html');
-?>
-  <script>
-    let imageByteLimit = 120000;
-    let fieldName = "<?php echo esc_attr($field_name) ?>";
-    let existingValue = "<?php echo esc_attr($field['value']) ?>";
-    let valueInput = document.getElementById("value_input");
-    valueInput.name = fieldName;
-    if (existingValue != null && existingValue != "") {
-      showImage(existingValue);
-    }
-  </script>
-<?php
+  $existing_value = esc_attr($field['value']);
+  $field_id = substr($field_name, 10, 3);
+
+  $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/image_field.html');
+  $html = str_replace("UID", $field_id, $html);
+  $html = str_replace("IMAGE_BYTE_LIMIT", "120000", $html);
+  $html = str_replace("EXISTING_IMAGE_DATA", $existing_value, $html);
+  echo $html;
+}
+
+/* Show the field in your form */
+/* Control the output for file_string field in your form. */
+add_action('frm_form_fields', 'show_audio_field', 10, 2);
+function show_audio_field($field, $field_name) {
+  if ($field['type'] != 'pattern_audio') {
+    return;
+  }
+  $field['value'] = stripslashes_deep($field['value']);
+  $existing_value = esc_attr($field['value']);
+  $field_id = substr($field_name, 10, 3);
+
+  $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/audio_field.html');
+  $html = str_replace("UID", $field_id, $html);
+  $html = str_replace("AUDIO_BYTE_LIMIT", "120000", $html);
+  $html = str_replace("EXISTING_AUDIO_DATA", $existing_value, $html);
+  echo $html;
 }
 
 
@@ -133,27 +162,42 @@ function show_audio_admin_field($field) {
 }
 
 
-/* Show the field in your form */
-/* Control the output for file_string field in your form. */
-add_action('frm_form_fields', 'show_audio_field', 10, 2);
-function show_audio_field($field, $field_name) {
-  if ($field['type'] != 'pattern_audio') {
-    return;
+
+
+add_shortcode('pattern_image_preview', 'image_preview');
+function image_preview($attr) {
+  $args = shortcode_atts(array(
+    'data' => '',
+  ), $attr);
+  $image_data = $args['data'];
+
+  if ($image_data == "") {
+    $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/image_preview_missing.html');
+    return $html;
+  } else {
+    $preview_id = "preview_" . rand();
+    $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/image_preview.html');
+    $html = str_replace("UID", $preview_id, $html);
+    $html = str_replace("IMAGE_SOURCE", $image_data, $html);
+    return $html;
   }
-  $field['value'] = stripslashes_deep($field['value']);
-  include('include/audio-field.html');
-?>
-  <script>
-    let audioByteLimit = 120000;
-    let audioFieldName = "<?php echo esc_attr($field_name) ?>";
-    console.log("Audio field name");
-    console.log(audioFieldName);
-    let existingAudioValue = "<?php echo esc_attr($field['value']) ?>";
-    let audioValueInput = document.getElementById("audio_value_input");
-    audioValueInput.name = audioFieldName;
-    if (existingAudioValue != null && existingAudioValue != "") {
-      showAudio(existingAudioValue);
-    }
-  </script>
-<?php
+}
+
+add_shortcode('pattern_audio_preview', 'audio_preview');
+function audio_preview($attr) {
+  $args = shortcode_atts(array(
+    'data' => '',
+  ), $attr);
+  $audio_data = $args['data'];
+
+  if ($audio_data == "") {
+    $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/audio_preview_missing.html');
+    return $html;
+  } else {
+    $preview_id = "preview_" . rand();
+    $html = file_get_contents(plugin_dir_path(__FILE__) . 'html/audio_preview.html');
+    $html = str_replace("UID", $preview_id, $html);
+    $html = str_replace("AUDIO_SOURCE", $audio_data, $html);
+    return $html;
+  }
 }

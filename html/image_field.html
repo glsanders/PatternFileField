@@ -1,0 +1,20 @@
+<body>
+    <input type="text" id="image_value_input_UID" name="item_meta[UID]" value="" hidden />
+    <div id="image_drop_container_UID" class="drop_container" ondrop="dropZoneDrop(event, UID);" ondragover="dropZoneDragOver(event, UID);" ondragleave="dropZoneDragLeave(event, UID);" class="">
+        <div class="inner_drop_block">
+            <p class="upload_text_UID">Drag file to upload,<br />or click below to select file.</p>
+            <input type="file" accept="image/png,image/jpeg" name="image_input_UID" id="image_input_UID" class="image_input" onchange="onUploadFile(UID);" />
+            <label for="image_input_UID">Select File</label>
+            <p id="upload_error_UID" class="error hidden"></p>
+        </div>
+    </div>
+    <div id="image_container_UID" class="image_container hidden">
+        <div class="image_inner_container" class="">
+            <img id="pattern_image_UID" class="pattern_image" src="" alt="Dropped image" />
+            <button class="image_delete_button" type="button" onclick="clearImage(UID);">Remove</button>
+        </div>
+    </div>
+</div>
+<script>
+    setupImageField("UID", IMAGE_BYTE_LIMIT, "EXISTING_IMAGE_DATA");
+</script>
