@@ -1,0 +1,41 @@
+.library_body {
+    height: 500px;
+}
+
+.collection_row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow-x: scroll;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.library_header {
+    height: 60px;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+}
+
+.library_preview_wrapper {
+    background-color: #d4d3d3;
+    border-radius: 15px;
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    margin: 15px;
+}
+
+.library_preview_wrapper.selected {
+    border-style: solid;
+    border-color: #99bc38;
+    border-width: 5px;
+}
+
+.library_preview_container {
+    position: relative;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
