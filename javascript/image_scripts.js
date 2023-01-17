@@ -28,7 +28,9 @@ function dropZoneDrop(event, uid) {
 
 function dropZoneDragOver(event, uid) {
     event.preventDefault();
-    enableDropZoneHover(uid);
+    // enableDropZoneHover(uid);
+    let dropZone = document.getElementById(`image_drop_container_${uid}`);
+    dropZone.classList.add("hover");
 }
 
 function onUploadFile(uid) {
@@ -38,20 +40,12 @@ function onUploadFile(uid) {
 }
 
 function dropZoneDragLeave(event, uid) {
-    disableDropZoneHover(uid);
-}
-
-// FUNCTIONS
-
-function enableDropZoneHover(uid) {
-    let dropZone = document.getElementById(`image_drop_container_${uid}`);
-    dropZone.classList.add("hover");
-}
-
-function disableDropZoneHover(uid) {
+    // disableDropZoneHover(uid);
     let dropZone = document.getElementById(`image_drop_container_${uid}`);
     dropZone.classList.remove("hover");
 }
+
+// FUNCTIONS
 
 function processFile(file, uid) {
     hideError(uid);
@@ -65,7 +59,12 @@ function processFile(file, uid) {
         if (!base64.includes("image/png") && !base64.includes("image/jpeg")) {
             showError("Image must be in PNG or JPEG format.", uid);
         } else {
-            showImage(base64, uid);
+            let uploadedImage = {
+                type: "upload",
+                name: file.name,
+                data: base64,
+            };
+            showImage(uploadedImage, uid);
         }
     };
     reader.onerror = function () {
@@ -84,7 +83,7 @@ function imageWithinSizeLimit(file, uid) {
     }
 }
 
-function showImage(data, uid) {
+function showImage(imageObject, uid) {
     let dropZone = document.getElementById(`image_drop_container_${uid}`);
     let imageContainer = document.getElementById(`image_container_${uid}`);
     let image = document.getElementById(`pattern_image_${uid}`);
@@ -92,8 +91,8 @@ function showImage(data, uid) {
     let fileInput = document.getElementById(`image_input_${uid}`);
 
     dropZone.classList.add("hidden");
-    image.src = data;
-    valueInput.value = data;
+    image.src = imageObject.data;
+    valueInput.value = JSON.stringify(imageObject);
     imageContainer.classList.remove("hidden");
     fileInput.disabled = true;
 }

@@ -37,7 +37,6 @@ function audioDropZoneDragLeave(event, uid) {
 
 function setupAudioField(uid, audioByteLimit, existingAudioData) {
     audioPlaying[uid] = false;
-    audioByteLimits[uid] = audioByteLimit;
     if (existingAudioData != null && existingAudioData != "") {
         showAudio(existingAudioData, uid);
     }
