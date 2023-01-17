@@ -10,3 +10,128 @@
 .red {
     color: red;
 }
+
+.allowedFileTypes {
+    margin-left: 20px;
+}
+
+.file_container {
+    background-color: #f2f1f1;
+    border-radius: 15px;
+    width: 250px;
+    height: 250px;
+    padding: 10px;
+    justify-content: center;
+    transition: all 200ms;
+}
+
+.file_inner_container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    flex-direction: column;
+}
+
+.content_container {
+    background-color: #d4d3d3;
+    padding: 0px;
+}
+
+.drop_container.hover {
+    background-color: #d4d3d3;
+    padding: 12px;
+}
+
+.inner_drop_block {
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    text-align: center;
+    align-items: center;
+    border: 2px dashed rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
+
+.upload_text {
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.file_input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.drop_button {
+    width: 140px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 12px;
+    color: white;
+    background-color: #29303d !important;
+    display: inline-block;
+    border-radius: 10px;
+    margin-top: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file_input:focus + label,
+.file_input + label:hover,
+.drop_button:hover {
+    background-color: transparent !important;
+    border: 2px solid #29303d;
+    color: #29303d;
+}
+
+.delete_button {
+    width: 250px;
+    height: 50px;
+    color: white;
+    background-color: #212529 !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.delete_button:hover {
+    color: white;
+    background-color: #99bc38 !important;
+}
+
+.center_content_wrapper {
+    width: 250px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.video_wrapper {
+    width: 230px;
+    height: 170px;
+}
+
+/* .pattern_field_button {
+    margin-bottom: 15px;
+    width: 175px;
+    height: 50px;
+    color: white !important;
+    background-color: #212529 !important;
+    align-items: center;
+} */
+/* 
+.pattern_field_button + button:hover {
+    background-color: #99bc38;
+} */
