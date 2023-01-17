@@ -1,111 +1,16 @@
-/**********************/
-/* Image Field Styles */
-/**********************/
-
-.drop_container {
-    background-color: #f2f1f1;
-    border-radius: 15px;
-    width: 250px;
-    height: 250px;
-    padding: 10px;
-    justify-content: center;
-    transition: all 200ms;
-}
-
-.drop_container.hover {
-    background-color: #d4d3d3;
-    padding: 12px;
-}
-
-.inner_drop_block {
-    border-radius: 15px;
-    text-align: center;
-    align-items: center;
-    border: 2px dashed rgba(0, 0, 0, 0.3);
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    padding: 10px;
-}
-
-.upload_text {
-    margin-top: 20px;
-    font-size: 15px;
-}
-
-.image_input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-}
-
-.image_input + label {
-    /* font-size: 1.25em; */
-    width: 125px;
-    height: 50px;
-    font-weight: 600;
-    font-size: 15px;
-    color: white;
-    background-color: #29303d;
-    display: inline-block;
-    /* padding-top: 10px; */
-    line-height: 50px;
-    border-radius: 10px;
-    margin-top: 15px;
-    cursor: pointer;
-}
-
-.image_input:focus + label,
-.image_input + label:hover {
-    background-color: transparent;
-    border: 2px solid #29303d;
-    color: #29303d;
-}
-
-.image_container {
-    background-color: #d4d3d3;
-    border-radius: 15px;
-    width: 250px;
-    height: 250px;
-    padding: 10px;
-    justify-content: center;
-}
-
-.image_inner_container {
+.audio_player_container {
     position: relative;
     justify-content: center;
     height: 100%;
     width: 100%;
 }
 
-.image_delete_button {
-    position: absolute;
-    bottom: -10px;
-    left: -10px;
-    width: 250px;
-    color: white;
-    background-color: #29303d;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.image_delete_button:hover {
-    color: white;
-    background-color: #545964;
-}
-
 .pattern_image {
-    height: 100%;
-    width: 100%;
+    height: 150px;
+    width: 250px;
     object-fit: contain;
+    margin-top: 2rem;
 }
-
-/**********************/
-/* Audio Field Styles */
-/**********************/
 
 /************************/
 /* Image Preview Styles */
