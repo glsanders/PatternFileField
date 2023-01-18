@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Formidable Pro Pattern File Multi-Field
  * Description: Adds a field-upload fields supporting multiple types. Stores values as a Base64 string or reference to Pattern Library.
- * Version: 2.0.0
+ * Version: 2.1.1
  * Author: Matt Maddux
  * Author URI: https://github.com/mattmaddux
  * License: GPL2
