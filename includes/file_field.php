@@ -287,7 +287,7 @@ function show_file_field($field, $field_name) {
                         <?php foreach (array_keys($collections) as $collection_name) : ?>
                             <label for="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection_name) ?></label>
                             <div id="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
-                                <? foreach ($collections[$collection_name] as $entry) : ?>
+                                <?php foreach ($collections[$collection_name] as $entry) : ?>
                                     <div>
                                         <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
                                             <div class="library_preview_container" class="">
