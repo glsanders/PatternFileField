@@ -70,7 +70,7 @@ function file_field_options($field, $display, $values) {
             $field[$option] = $default;
         }
     }
-    if (class_exists('Pattern_Library')) {
+    if (class_exists('Pattern_Media')) {
         $collections = Pattern_Media::getCollections();
     }
 
