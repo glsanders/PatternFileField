@@ -224,7 +224,7 @@ function show_file_field($field, $field_name) {
                     <input type="file" accept="<?php echo esc_attr($allowed_mime_types) ?>" name="file_input_<?php echo esc_attr($field_id) ?>" id="file_input_<?php echo esc_attr($field_id) ?>" class="file_input" onchange="onUploadFile(<?php echo esc_attr($field_id) ?>);" />
                     <label for="file_input_<?php echo esc_attr($field_id) ?>" class="drop_button">Select File<br />to Upload</label>
                     <?php if ($showMediaLibrary) { ?>
-                        <button type="button" class="drop_button" data-bs-toggle="modal" data-bs-target="#libraryModal_<?php echo esc_attr($field_id) ?>">Select From<br />Pattern Library</button>
+                        <button type="button" class="drop_button" onclick="showLibrary(<?php echo esc_attr($field_id) ?>);">Select From<br />Pattern Library</button>
                     <?php } ?>
                     <p id="upload_error_<?php echo esc_attr($field_id) ?>" class="error hidden"></p>
                 </div>
@@ -277,33 +277,31 @@ function show_file_field($field, $field_name) {
 
     <!-- Modal -->
     <?php if ($showMediaLibrary) : ?>
-        <div class="modal fade" id="libraryModal_<?php echo esc_attr($field_id) ?>" tabindex="-1" aria-labelledby="libraryModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="library_header modal-header">
-                        <h1 class="fs-3" id="libraryModalLabel">Pattern Library</h1>
-                    </div>
-                    <div id="library_body_<?php echo esc_attr($field_id) ?>" class="library_body modal-body overflow-auto">
-                        <?php foreach (array_keys($collections) as $collection_name) : ?>
-                            <label for="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection_name) ?></label>
-                            <div id="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
-                                <?php foreach ($collections[$collection_name] as $entry) : ?>
-                                    <div>
-                                        <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
-                                            <div class="library_preview_container" class="">
-                                                <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" />
-                                            </div>
+        <div class="my-modal" id="libraryNewModal_<?php echo esc_attr($field_id) ?>">
+            <div class="my-modal-content ">
+                <div class="my-modal-title">Pattern Library</div>
+                <div class="my-modal-close my-modal-close-btn btn btn-sm"><i class="fa fa-window-close"></i></div>
+                <div class="my-modal-body overflow-auto" style="height: 800px;" id="library_body_<?php echo esc_attr($field_id) ?>">
+                    <?php foreach (array_keys($collections) as $collection_name) : ?>
+                        <label for="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection_name) ?></label>
+                        <div id="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
+                            <?php foreach ($collections[$collection_name] as $entry) : ?>
+                                <div>
+                                    <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
+                                        <div class="library_preview_container" class="">
+                                            <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" />
                                         </div>
                                     </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="clearSelection(<?php echo esc_attr($field_id) ?>);" data-bs-dismiss="modal">Cancel</button>
-                        <button id="library_apply_button_<?php echo esc_attr($field_id) ?>" type="button" class="btn btn-primary" onclick="applyFromLibrary(<?php echo esc_attr($field_id) ?>)" data-bs-dismiss="modal" disabled>Apply</button>
-                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
+                <div class="my-modal-footer">
+                    <button type="button" class="my-modal-close-btn btn btn-sm btn-secondary" onclick="closeLibrary(<?php echo esc_attr($field_id) ?>);">Cancel</button>
+                    <button id="library_apply_button_<?php echo esc_attr($field_id) ?>" type="button" class="btn btn-sm btn-success ms-auto" onclick="applyFromLibrary(<?php echo esc_attr($field_id) ?>)" disabled>Apply</button>
+                </div>
+
             </div>
         </div>
     <?php endif; ?>

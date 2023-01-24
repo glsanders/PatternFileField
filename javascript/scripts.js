@@ -3,7 +3,6 @@ var fetchedLibraryItems = {};
 function configureField(uid) {
     addAudioListeners(uid);
     fetchAllLibraryItems(uid);
-    moveLibraryModal(uid);
 }
 
 async function query(url, callback) {
@@ -294,9 +293,15 @@ function getPlayStatus(uid) {
 
 // Library Scripts
 
-function moveLibraryModal(uid) {
-    var modal = document.getElementById(`libraryModal_${uid}`);
-    document.body.appendChild(modal);
+function showLibrary(uid) {
+    var modal = document.getElementById(`libraryNewModal_${uid}`);
+    modal.style.display = "block";
+}
+
+function closeLibrary(uid) {
+    clearSelection(uid);
+    var modal = document.getElementById(`libraryNewModal_${uid}`);
+    modal.style.display = "none";
 }
 
 function selectLibraryEntry(entry_id, uid) {
@@ -321,7 +326,7 @@ function applyFromLibrary(uid) {
         };
         showImage(file, uid);
     }
-    clearSelection(uid);
+    closeLibrary(uid);
 }
 
 function clearSelection(uid) {
