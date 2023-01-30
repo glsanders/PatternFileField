@@ -223,7 +223,12 @@ function show_file_field($field, $field_name) {
     $library_fetch_url = get_rest_url() . "pattern-api/media?action=getlibraryitem&id=";
 
     if ($showMediaLibrary && class_exists('Pattern_Media')) {
-        $collections = Pattern_Media::getItemList();
+        $allowed_collection_ids = $field['enabledLibraryCollections'];
+        if (isset($allowed_collection_ids) || count($allowed_collection_ids) > 0) {
+            $collection_list = array_map(function($id) { return Pattern_Media::getCollection($id)[0]; }, $allowed_collection_ids);
+        } else {
+            $collection_list = Pattern_Media::getCollections();
+        }
     }
 ?>
     <div id="pattern_file_field_wrapper_<?php echo esc_attr($field_id) ?>" data-byte-limit=<?php echo esc_attr($maxSizeBytes) ?> data-allowed-types="<?php echo esc_attr($allowed_mime_types) ?>">
@@ -294,14 +299,14 @@ function show_file_field($field, $field_name) {
                 <div class="my-modal-title">Pattern Library</div>
                 <div class="my-modal-close my-modal-close-btn btn btn-sm mt-1" onclick="closeLibrary(<?php echo esc_attr($field_id) ?>);"><i class="fa fa-window-close"></i></div>
                 <div class="my-modal-body overflow-auto" style="height: 800px;" id="library_body_<?php echo esc_attr($field_id) ?>">
-                    <?php foreach (array_keys($collections) as $collection_name) : ?>
-                        <label for="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection_name) ?></label>
-                        <div id="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
-                            <?php foreach ($collections[$collection_name] as $entry) : ?>
+                    <?php foreach ($collection_list as $collection) : ?>
+                        <label for="collection_<?php echo esc_attr($collection->id) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection->collection_name) ?></label>
+                        <div id="collection_<?php echo esc_attr($collection->id) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
+                            <?php foreach (Pattern_Media::getCollectionItems($collection->id) as $entry) : ?>
                                 <div>
                                     <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
                                         <div class="library_preview_container" class="">
-                                            <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" />
+                                            <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" src="<?php echo esc_attr($entry->entry_value) ?>"/>
                                         </div>
                                     </div>
                                 </div>

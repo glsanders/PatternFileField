@@ -2,7 +2,7 @@ var fetchedLibraryItems = {};
 
 function configureField(uid) {
     addAudioListeners(uid);
-    fetchAllLibraryItems(uid);
+    // fetchAllLibraryItems(uid);
 }
 
 async function query(url, callback) {
