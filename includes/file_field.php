@@ -190,14 +190,26 @@ function show_file_field($field, $field_name) {
     $field_id = $field['id'];
     $maxSizeBytes = $field['maxSizeKB'] * 1000;
     $raw_value = $field['value'];
-    if (is_string($raw_value)) {
-        $existing_value_json = htmlspecialchars_decode($raw_value);
-        $existing_value = json_decode($existing_value_json, associative: true);
-    } else {
-        $existing_value = $raw_value;
-        $existing_value_json = (empty($existing_value)) ? '' : json_encode($existing_value);
+
+
+    if (!empty($raw_value)) {
+        if (strlen($raw_value > 10)) {
+            $existing_value = (object) [
+                'type' => 'saved',
+                'data' => $raw_value,
+            ];
+        } else {
+            $library_item = Pattern_Media::getLibraryItem($raw_value);
+            $existing_value = (object) [
+                'type' => 'library',
+                'id' => $raw_value,
+                'data' => $library_item->entry_value
+            ];
+        }
+        $existing_value_json = json_encode($existing_value);
     }
-    $file_data = (empty($existing_value)) ? '' : $existing_value['data'];
+
+    $file_data = (empty($existing_value)) ? '' : $existing_value->data;
     $file_type = (empty($file_data)) ? '' : PatternFileType::from_data_string($file_data);
     $mime_type = (empty($file_type)) ? '' : $file_type?->mime_type();
     $file_category = (empty($file_type)) ? '' : $file_type->category();
