@@ -292,7 +292,7 @@ function show_file_field($field, $field_name) {
         <div class="my-modal" id="libraryNewModal_<?php echo esc_attr($field_id) ?>">
             <div class="my-modal-content ">
                 <div class="my-modal-title">Pattern Library</div>
-                <div class="my-modal-close my-modal-close-btn btn btn-sm"><i class="fa fa-window-close"></i></div>
+                <div class="my-modal-close my-modal-close-btn btn btn-sm mt-1" onclick="closeLibrary(<?php echo esc_attr($field_id) ?>);"><i class="fa fa-window-close"></i></div>
                 <div class="my-modal-body overflow-auto" style="height: 800px;" id="library_body_<?php echo esc_attr($field_id) ?>">
                     <?php foreach (array_keys($collections) as $collection_name) : ?>
                         <label for="collection_<?php echo esc_attr($collection_name) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection_name) ?></label>
