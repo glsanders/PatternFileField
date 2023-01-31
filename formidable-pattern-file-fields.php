@@ -29,8 +29,6 @@
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-include_once("includes/image_field.php");
-include_once("includes/audio_field.php");
 include_once("includes/file_field.php");
 
 /*
