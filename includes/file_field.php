@@ -191,9 +191,9 @@ function show_file_field($field, $field_name) {
     $maxSizeBytes = $field['maxSizeKB'] * 1000;
     $raw_value = $field['value'];
 
-
+    $existing_value_json = json_encode((object)[]);
     if (!empty($raw_value)) {
-        if (strlen($raw_value > 10)) {
+        if (strlen($raw_value) > 10) {
             $existing_value = (object) [
                 'type' => 'saved',
                 'data' => $raw_value,
@@ -276,7 +276,7 @@ function show_file_field($field, $field_name) {
             <div id="audio_container_<?php echo esc_attr($field_id) ?>" class="file_container audio_container <?php echo ($file_category == PatternFileCategory::audio) ? '' : 'hidden' ?>">
                 <div class="file_inner_container">
                     <audio id="pattern_audio_<?php echo esc_attr($field_id) ?>" class="pattern_audio" autobuffer="autobuffer">
-                        <source id="pattern_audio_src_<?php echo esc_attr($field_id) ?>" class="pattern_audio_src" src="<? echo ($file_category == PatternFileCategory::audio) ? esc_attr($file_data) : '' ?>" />
+                        <source id="pattern_audio_src_<?php echo esc_attr($field_id) ?>" class="pattern_audio_src" src="<?php echo ($file_category == PatternFileCategory::audio) ? esc_attr($file_data) : '' ?>" />
                     </audio>
                     <!-- <div class="controls"> -->
                     <div class="button_wrapper">
@@ -295,18 +295,24 @@ function show_file_field($field, $field_name) {
     <!-- Modal -->
     <?php if ($showMediaLibrary) : ?>
         <div class="my-modal" id="libraryNewModal_<?php echo esc_attr($field_id) ?>">
-            <div class="my-modal-content ">
+            <div class="my-modal-content" style="width:1130px;">
                 <div class="my-modal-title">Pattern Library</div>
                 <div class="my-modal-close my-modal-close-btn btn btn-sm mt-1" onclick="closeLibrary(<?php echo esc_attr($field_id) ?>);"><i class="fa fa-window-close"></i></div>
-                <div class="my-modal-body overflow-auto" style="height: 800px;" id="library_body_<?php echo esc_attr($field_id) ?>">
+                <div class="my-modal-body overflow-auto" style="height: 620px;" id="library_body_<?php echo esc_attr($field_id) ?>">
                     <?php foreach ($collection_list as $collection) : ?>
-                        <label for="collection_<?php echo esc_attr($collection->id) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection->collection_name) ?></label>
+                        <label class="collection-label" for="collection_<?php echo esc_attr($collection->id) ?>_<?php echo esc_attr($field_id) ?>"><?php echo esc_attr($collection->collection_name) ?></label>
                         <div id="collection_<?php echo esc_attr($collection->id) ?>_<?php echo esc_attr($field_id) ?>" class="collection_row">
                             <?php foreach (Pattern_Media::getCollectionItems($collection->id) as $entry) : ?>
                                 <div>
-                                    <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
+                                    <div id="library_preview_wrapper_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="library_preview_wrapper" onclick="selectLibraryEntry(<?php echo esc_attr($entry->id) ?>,<?php echo esc_attr($field_id) ?>);" data-field-id="<?php echo esc_attr($field_id) ?>" data-entry-id="<?php echo esc_attr($entry->id) ?>"  data-entry-name="<?php echo esc_attr($entry->entry_name) ?>" data-entry-mime="<?php echo esc_attr($entry->entry_type) ?>" data-fetch-url="<?php echo esc_attr($library_fetch_url . $entry->id) ?>">
                                         <div class="library_preview_container" class="">
-                                            <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" src="<?php echo esc_attr($entry->entry_value) ?>"/>
+                                            <?php if(strpos($entry->entry_type , 'image') !== false) : ?>
+                                                <img id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" src="<?php echo esc_attr($entry->entry_value) ?>"/>
+                                            <?php elseif(strpos($entry->entry_type,'video') !== false) : ?>
+                                                <video controls id="image_preview_<?php echo esc_attr($entry->id) ?>_<?php echo esc_attr($field_id) ?>" class="image_preview" src="<?php echo esc_attr($entry->entry_value) ?>"/>
+                                            <?php else : ?>
+                                                <?php echo "Invalid file entry" ?>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

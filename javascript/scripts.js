@@ -130,7 +130,6 @@ function showImage(imageObject, uid) {
     let image = document.getElementById(`pattern_image_${uid}`);
     let valueInput = document.getElementById(`value_input_${uid}`);
     let fileInput = document.getElementById(`file_input_${uid}`);
-
     dropZone.classList.add("hidden");
     image.src = imageObject.data;
     valueInput.value = JSON.stringify(imageObject);
@@ -145,9 +144,8 @@ function showVideo(videoObject, uid) {
     let videoSrc = document.getElementById(`pattern_video_src_${uid}`);
     let valueInput = document.getElementById(`value_input_${uid}`);
     let fileInput = document.getElementById(`file_input_${uid}`);
-
     dropZone.classList.add("hidden");
-    videoSrc.type = videoObject.mimeType;
+    videoSrc.type = videoObject.mimeType
     videoSrc.src = videoObject.data;
     valueInput.value = JSON.stringify(videoObject);
     videoContainer.classList.remove("hidden");
@@ -322,9 +320,22 @@ function applyFromLibrary(uid) {
         let file = {
             type: "library",
             id: entryID,
-            data: imageTag.src,
+            data: imageTag.src
         };
-        showImage(file, uid);
+        switch (imageTag.localName){
+            case "img":
+            case "image":
+                showImage(file, uid);
+                break;
+            case "video":
+                file.mimeType = currentSelected.dataset.entryMime;
+                showVideo(file, uid);
+                break;              
+            case "audio":
+                showAudio(file, uid);
+                break;
+        }
+        
     }
     closeLibrary(uid);
 }

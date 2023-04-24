@@ -5,10 +5,18 @@
 .collection_row {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
     overflow-x: scroll;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #f3f5f8;
+    border-radius: 15px;
+}
+
+.collection-label{
+    font-size: 1rem;
     margin-top: 15px;
-    margin-bottom: 15px;
 }
 
 .library_header {
