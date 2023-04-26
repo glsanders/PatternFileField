@@ -240,17 +240,17 @@ function setupPreview(uid) {
 
 function addAudioListeners(uid) {
     let audio = document.getElementById(`pattern_audio_${uid}`);
-    console.log("Listener: Pause");
+    //console.log("Listener: Pause");
     audio.addEventListener("pause", function (event) {
         onPause(event, uid);
     });
 
     audio.addEventListener("play", function (event) {
-        console.log("Listener: Play");
+        //console.log("Listener: Play");
         onPlay(event, uid);
     });
     audio.addEventListener("timeupdate", function (event) {
-        console.log("Listener: Progress");
+        //console.log("Listener: Progress");
         onProgress(event, uid);
     });
 }

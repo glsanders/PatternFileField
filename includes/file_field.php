@@ -194,10 +194,14 @@ function show_file_field($field, $field_name) {
     $existing_value_json = json_encode((object)[]);
     if (!empty($raw_value)) {
         if (strlen($raw_value) > 10) {
-            $existing_value = (object) [
-                'type' => 'saved',
-                'data' => $raw_value,
-            ];
+            if (substr($raw_value , 0,1) === "{"){
+                $existing_value = json_decode(htmlspecialchars_decode($raw_value));
+            }else{
+                $existing_value = (object) [
+                    'type' => 'saved',
+                    'data' => $raw_value,
+                ];
+            }
         } else {
             $library_item = Pattern_Media::getLibraryItem($raw_value);
             $existing_value = (object) [
@@ -234,7 +238,7 @@ function show_file_field($field, $field_name) {
     <div id="pattern_file_field_wrapper_<?php echo esc_attr($field_id) ?>" data-byte-limit=<?php echo esc_attr($maxSizeBytes) ?> data-allowed-types="<?php echo esc_attr($allowed_mime_types) ?>">
         <div>
             <!-- Drop Container -->
-            <input style="display: none;" type="text" id="value_input_<?php echo esc_attr($field_id) ?>" name="item_meta[<?php echo esc_attr($field_id) ?>]" value="<?php echo esc_attr($existing_value_json) ?>" />
+            <input style="display: none;" type="text" id="value_input_<?php echo esc_attr($field_id) ?>" name="item_meta[<?php echo esc_attr($field_id) ?>]" value='<?php echo esc_attr($existing_value_json) ?>' />
             <div id="file_drop_container_<?php echo esc_attr($field_id) ?>" class="file_container drop_container <?php echo (empty($file_data) ? '' : 'hidden') ?>" ondrop="dropZoneDrop(event, <?php echo esc_attr($field_id) ?>);" ondragover="dropZoneDragOver(event, <?php echo esc_attr($field_id) ?>);" ondragleave="dropZoneDragLeave(event, <?php echo esc_attr($field_id) ?>);">
                 <div class="inner_drop_block">
                     <p class="upload_text_<?php echo esc_attr($field_id) ?>">Drag file to upload</p>
@@ -284,7 +288,7 @@ function show_file_field($field, $field_name) {
                     </div>
                     <div class="audio_progress_line">
                         <div id="audio_progress_<?php echo esc_attr($field_id) ?>" class="audio_progress"></div>
-                    </div>
+                    </div> 
                     <!-- </div> -->
                     <button class="delete_button" type="button" onclick="clearFile(<?php echo esc_attr($field_id) ?>);">Remove</button>
                 </div>
